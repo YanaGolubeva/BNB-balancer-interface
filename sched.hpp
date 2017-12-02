@@ -17,6 +17,7 @@
 #include "bnbscheduler.hpp"
 #include "sstrat.hpp"
 #include <chaiscript/chaiscript.hpp>
+#include <string>
 
 class Sched : public BNBScheduler {
 public:
@@ -26,7 +27,7 @@ public:
      * @param chaiIniFileName name of file with chai initialization
      * @param chaiSchedFileName name of file with chai scheduler
      */
-    Sched(std::vector<int> &balance_params, string chaiIniFileName, string chaiSchedFileName) {
+    Sched(std::vector<int> &balance_params, std::string chaiIniFileName, std::string chaiSchedFileName) {
         mChaiIniFileName = chaiIniFileName;
         mChaiSchedFileName = chaiSchedFileName;
         chai.add(chaiscript::var(&balance_params), "balance_params");
@@ -140,8 +141,8 @@ public:
     std::vector<int> mFreeProcs;
     //переменная для хранения статуса, полученного в результате отрабатывания скрипта.
     int mState;
-    string mChaiIniFileName;
-    string mChaiSchedFileName;
+    std::string mChaiIniFileName;
+    std::string mChaiSchedFileName;
 };
 
 
