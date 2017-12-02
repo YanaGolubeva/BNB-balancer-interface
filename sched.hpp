@@ -22,14 +22,18 @@ class Sched : public BNBScheduler {
 public:
     /**
      * Constructor
-     * @param steps number of steps to perform on the master process
+     * @param balance_params parameters for balancer
+     * @param chaiIniFileName name of file with chai initialization
+     * @param chaiSchedFileName name of file with chai scheduler
      */
-    Sched(std::vector<int> &balance_params) {
+    Sched(std::vector<int> &balance_params, string chaiIniFileName, string chaiSchedFileName) {
+        mChaiIniFileName = chaiIniFileName;
+        mChaiSchedFileName = chaiSchedFileName;
         chai.add(chaiscript::var(&balance_params), "balance_params");
         chai.add(chaiscript::bootstrap::standard_library::vector_type<std::vector<int>>("IntVector"));
         chai.add(chaiscript::bootstrap::standard_library::vector_type<std::vector<long long>>("longLongVector"));
         chai.add(chaiscript::fun(&Sched::M_BNB_ASSERT),"BNB_ASSERT");
-        chai.eval_file("ChaiFiles/ChaiIni.chai");
+        chai.eval_file(mChaiIniFileName);
         mState = 1;
         mMasterSearchStrategy = SearchStrategies::WFS;
         mSlaveSearchStrategy = SearchStrategies::DFS;
@@ -123,7 +127,7 @@ public:
         chai.add(chaiscript::var(std::ref(ActionmArgs)), "action_mArgs");
         chai.add(chaiscript::var(std::ref(mState)), "mState");
 
-        chai.eval_file("ChaiFiles/ChaiSched.chai");
+        chai.eval_file(mChaiSchedFileName);
 
         for(int i = 0; i < MAX_ARGS; i ++) {
                 action.mArgs[i] = ActionmArgs[i];
@@ -136,6 +140,8 @@ public:
     std::vector<int> mFreeProcs;
     //переменная для хранения статуса, полученного в результате отрабатывания скрипта.
     int mState;
+    string mChaiIniFileName;
+    string mChaiSchedFileName;
 };
 
 
